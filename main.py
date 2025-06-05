@@ -1,9 +1,14 @@
 from fastapi import FastAPI
+from app.api import auth
+from fastapi.middleware.cors import CORSMiddleware
 
-#tao API instance
 app = FastAPI()
-
-#di tao 1 api
-@app.get("/hello") # /hello: route định tuyến
-def read_root():
-    return {"message": "Hello World"}
+app.include_router(auth.router, prefix="/auth")
+# ✅ Cho phép frontend kết nối
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # domain Next.js
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
